@@ -1,28 +1,24 @@
 import speech_recognition as sr
 
-
 def speech_to_text():
 
     recognizer = sr.Recognizer()
 
-
-    with sr.Microphone() as source:
-
-        stt = "Listening..."
-
-        recognizer.adjust_for_ambient_noise(
-            source,
-            duration=1
-        )
-
-        audio = recognizer.listen(
-            source,
-            timeout=10,
-            phrase_time_limit=10
-        )
-
-
     try:
+        with sr.Microphone() as source:
+
+            print("Listening...")
+
+            recognizer.adjust_for_ambient_noise(
+                source,
+                duration=1
+            )
+
+            audio = recognizer.listen(
+                source,
+                timeout=10,
+                phrase_time_limit=10
+            )
 
         text = recognizer.recognize_google(
             audio,
@@ -31,7 +27,18 @@ def speech_to_text():
 
         return text
 
+    except sr.WaitTimeoutError:
+        print("No speech detected.")
+        return None
+
+    except sr.UnknownValueError:
+        print("Could not understand audio.")
+        return None
+
+    except sr.RequestError as e:
+        print(f"Google Speech API Error: {e}")
+        return None
 
     except Exception as e:
-
+        print(f"Microphone Error: {e}")
         return None
