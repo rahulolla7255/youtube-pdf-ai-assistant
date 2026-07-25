@@ -8,17 +8,19 @@ load_dotenv()
 
 def load_database():
 
+    # Check if vector database exists
+    if not os.path.exists("vectorstore/index.faiss"):
+        return None
+
     embeddings = HuggingFaceEmbeddings(
         model_name="sentence-transformers/all-MiniLM-L6-v2"
     )
-
 
     vectorstore = FAISS.load_local(
         "vectorstore",
         embeddings,
         allow_dangerous_deserialization=True
     )
-
 
     return vectorstore
 
@@ -29,6 +31,11 @@ def ask_question(question, chat_history):
     # Load vector database
 
     vectorstore = load_database()
+    if vectorstore is None:
+        return (
+            "⚠️ No knowledge base found.\n\n"
+            "Please upload a PDF or YouTube video and click **Process Documents** first."
+        )
 
 
 
