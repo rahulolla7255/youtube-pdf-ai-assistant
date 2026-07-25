@@ -12,4 +12,3 @@ youtube-transcript-api
 python-dotenv
 gtts
 SpeechRecognition
-PyAudio
