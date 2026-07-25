@@ -206,23 +206,24 @@ col1, col2 = st.columns(
 
 with col2:
 
-    if st.button(
-        "🎤"
-    ):
+    if st.button("🎤 Speak"):
 
-        with st.spinner(
-            "Listening..."
-        ):
+        with st.spinner("Listening... Speak now"):
 
-            voice_text = speech_to_text()
+            question = speech_to_text()
 
 
-        if voice_text:
+        if question:
 
-            st.session_state.voice_question = voice_text
+            st.success(f"You said: {question}")
+
+            st.session_state.voice_question = question
 
             st.rerun()
 
+        else:
+
+            st.warning("Could not understand voice")
 
 
 with col1:
@@ -237,6 +238,7 @@ if not question:
     question = st.session_state.voice_question
 
 st.session_state.voice_question = ""
+
 
 if question:
 
