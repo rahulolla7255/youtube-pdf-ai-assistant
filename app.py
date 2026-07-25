@@ -203,28 +203,31 @@ col1, col2 = st.columns(
     [10, 1]
 )
 
-
 with col2:
 
-    if st.button("🎤 Speak"):
+    # Voice input only works on local computer
+    if os.name == "nt":   # Windows
 
-        with st.spinner("Listening... Speak now"):
+        if st.button("🎤 Speak"):
 
-            question = speech_to_text()
+            with st.spinner("🎤 Listening... Speak now"):
 
+                try:
+                    question = speech_to_text()
 
-        if question:
+                    if question:
+                        st.success(f"You said: {question}")
+                        st.session_state.voice_question = question
+                        st.rerun()
+                    else:
+                        st.warning("Could not understand voice.")
 
-            st.success(f"You said: {question}")
+                except Exception as e:
+                    st.error(f"Microphone Error: {e}")
 
-            st.session_state.voice_question = question
-
-            st.rerun()
-
-        else:
-
-            st.warning("Could not understand voice")
-
+    else:
+        st.button("🎤 Speak", disabled=True)
+        st.caption("🎤 Voice input is available only in the local desktop app.")
 
 with col1:
 
